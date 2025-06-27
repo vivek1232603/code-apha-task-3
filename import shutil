@@ -1,0 +1,40 @@
+import os
+import shutil
+
+# Define the source folder to organize
+SOURCE_DIR = '/nivi'  # Update this path
+DEST_DIRS = {
+    'Images': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'],
+    'Documents': ['.pdf', '.docx', '.doc', '.txt', '.xlsx', '.pptx'],
+    'Videos': ['.mp4', '.mkv', '.avi', '.mov'],
+    'Music': ['.mp3', '.wav', '.flac'],
+    'Archives': ['.zip', '.rar', '.tar', '.gz'],
+    'Scripts': ['.py', '.js', '.sh', '.bat'],
+    'Others': []
+}
+
+
+def get_destination_folder(extension):
+    for folder, extensions in DEST_DIRS.items():
+        if extension.lower() in extensions:
+            return folder
+    return 'Others'
+
+
+def organize_files():
+    for filename in os.listdir(SOURCE_DIR):
+        file_path = os.path.join(SOURCE_DIR, filename)
+
+        if os.path.isfile(file_path):
+            _, ext = os.path.splitext(filename)
+            folder_name = get_destination_folder(ext)
+
+            dest_folder_path = os.path.join(SOURCE_DIR, folder_name)
+            os.makedirs(dest_folder_path, exist_ok=True)
+
+            new_path = os.path.join(dest_folder_path, filename)
+            shutil.move(file_path, new_path)
+            print(f"Moved: {filename} → {folder_name}/")
+
+    if __name__ == "__main__":
+            organize_files()
